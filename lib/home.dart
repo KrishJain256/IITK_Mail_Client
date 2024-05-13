@@ -15,7 +15,7 @@ class _homepageState extends State<homepage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
         child: Column(
           children: [
             appbar(),

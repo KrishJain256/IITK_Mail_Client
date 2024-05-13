@@ -16,6 +16,13 @@ class _homepageState extends State<homepage> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xffa58fd2), Color(0xffddc3fc)],
+          )
+        ),
         child: Column(
           children: [
             appbar(),

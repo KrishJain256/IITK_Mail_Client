@@ -16,6 +16,8 @@ class _homepageState extends State<homepage> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        width: size.width,
+        height: size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -28,7 +30,7 @@ class _homepageState extends State<homepage> {
             appbar(),
             Stack(
               children: [
-
+                
 
               ],
             )

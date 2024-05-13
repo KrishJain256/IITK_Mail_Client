@@ -30,6 +30,13 @@ class _homepageState extends State<homepage> {
             appbar(),
             Stack(
               children: [
+                Text(
+                  "All inboxes",
+                  style: GoogleFonts.ubuntu(
+                      color: Colors.white,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold),
+                ),
                 
 
               ],

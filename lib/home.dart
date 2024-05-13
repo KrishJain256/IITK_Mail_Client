@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iitk_mail_client/appbar.dart';
 
 class homepage extends StatefulWidget {
   const homepage({super.key, required this.title});
@@ -17,15 +18,10 @@ class _homepageState extends State<homepage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            
+            appbar(),
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 50, // Adjust the radius for the size you want
-                  backgroundImage: "https://i.redd.it/bcyq3rjk2w071.png".isNotEmpty ? NetworkImage("https://i.redd.it/bcyq3rjk2w071.png") : null,
-                  backgroundColor: Colors.grey.shade200, // A default color for the avatar
-                  child: "https://i.redd.it/bcyq3rjk2w071.png".isEmpty ? Text("K") : null,
-                ),
+                
 
               ],
             )

@@ -13,7 +13,6 @@ class pfp extends StatelessWidget {
 }
 
 class appbar extends StatelessWidget {
-  const appbar({super.key});
 
   @override
   Widget build(BuildContext context) {

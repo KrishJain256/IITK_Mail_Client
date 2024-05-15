@@ -24,6 +24,102 @@ class pfp extends StatelessWidget {
   }
 }
 
+
+class email_banner extends StatelessWidget {
+  // Variables
+  Color _starcolor = Colors.black54;
+  IconData _star = Icons.star_border as IconData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10,right: 10),
+      child: Column(
+        children: [
+          AppBar(
+            toolbarHeight: 65,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            leading: pfp(),
+            title:
+            Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child:  Text(
+                        "Krish Jain",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.ubuntu(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        )
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                        "Reconciliation of Purana",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.ubuntu(
+                          color: Colors.black,
+                          fontSize: 23,
+                        )
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+            actions: [
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
+                  ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.reply,
+                          semanticLabel: "Reply",
+                          color: Colors.black54,
+                        ),
+                        iconSize: 24,
+                        onPressed: () {  },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _star,
+                          color: _starcolor,
+                          semanticLabel: "Mark as Important",
+                        ),
+                        iconSize: 24,
+                        onPressed: () {
+                            _star = Icons.star;
+                            _starcolor = Colors.deepOrangeAccent;
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+          Divider(
+            thickness: 1,
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class _homepageState extends State<homepage> {
 
   // Variables
@@ -105,26 +201,26 @@ class _homepageState extends State<homepage> {
                       children: [
                         Container(
                           width: size.width,
-                          height: size.height-250,
+                          height: size.height - 250,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20)
                           ),
-                          child:
-                          Column(
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(left: 10,right: 10),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    AppBar(
-                                      toolbarHeight: 70,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                                      leading: pfp(),
-                                      title:
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10,right: 10),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        AppBar(
+                                          toolbarHeight: 70,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                          leading: pfp(),
+                                          title:
                                           Align(
                                             alignment: Alignment.topLeft,
                                             child: Column(
@@ -156,55 +252,67 @@ class _homepageState extends State<homepage> {
                                               ],
                                             ),
                                           ),
-                                      actions: [
-                                        Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topCenter,
-                                              child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
-                                            ),
-                                            // SizedBox(
-                                            //   height: 5,
-                                            // ),
-                                            Row(
+                                          actions: [
+                                            Column(
                                               children: [
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.reply,
-                                                    semanticLabel: "Reply",
-                                                    color: Colors.black54,
-                                                  ),
-                                                  iconSize: 24,
-                                                  onPressed: () {  },
+                                                Align(
+                                                  alignment: Alignment.topCenter,
+                                                  child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    _star,
-                                                    color: _starcolor,
-                                                    semanticLabel: "Mark as Important",
-                                                  ),
-                                                  iconSize: 24,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _star = Icons.star;
-                                                      _starcolor = Colors.deepOrangeAccent;
-                                                    });
-                                                  },
-                                                ),
+                                                // SizedBox(
+                                                //   height: 5,
+                                                // ),
+                                                Row(
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.reply,
+                                                        semanticLabel: "Reply",
+                                                        color: Colors.black54,
+                                                      ),
+                                                      iconSize: 24,
+                                                      onPressed: () {  },
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        _star,
+                                                        color: _starcolor,
+                                                        semanticLabel: "Mark as Important",
+                                                      ),
+                                                      iconSize: 24,
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _star = Icons.star;
+                                                          _starcolor = Colors.deepOrangeAccent;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                )
                                               ],
                                             )
                                           ],
+                                        ),
+                                        Divider(
+                                          thickness: 1,
                                         )
                                       ],
                                     ),
-                                    Divider(
-                                      thickness: 1,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                                  ),
+                                  email_banner(),
+                                  email_banner(),
+                                  email_banner(),
+                                email_banner(),
+                                email_banner(),
+                                email_banner(),
+                                email_banner(),
+                                email_banner(),
+                                email_banner(),
+
+                                ],
+                            ),
+                          )
+
                         )
                       ]
                     ),

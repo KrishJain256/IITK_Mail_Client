@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iitk_mail_client/login.dart';
 import 'package:iitk_mail_client/home.dart';
+import 'package:iitk_mail_client/mailview.dart';
 
 void main() {
   runApp(const IITK_Mail_Client());
@@ -33,7 +34,7 @@ class IITK_Mail_Client extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const homepage(title: 'IITK Mail Client'),
+      home: const mailview(title: 'IITK Mail Client'),
     );
   }
 }

@@ -1,16 +1,15 @@
-# iitk_mail_client
+# IITK Mail Client
 
-A new Flutter project.
+## Steps to run
+1. Clone the Git Repo
+2. Open it in Android Studio
+3. Select the Project View to open it
+4. Configure the run button to run app.dart
+5. In app.dart, at the end of the file we find a line 
+```
+home: const mailview(title: 'IITK Mail Client'),
+```
+   In this line, change the "mailview" to "homepage" to view homepage ( i.e. the list email view ) and to "loginpage" to view the loginpage.
+6. For the Virtual device, use Google Pixel 6a, UpsideDownCake for API level 34 and Android 14.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Currently, I have built it for Google Pixel 6a ( my phone ). I need to do it for other devices and build connections for login redirect and state change 😅.

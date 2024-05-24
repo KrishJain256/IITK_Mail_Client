@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="email_sender.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" nameIsGenerated="true">
+    <option name="filePath" value="$PROJECT_DIR$/lib/api/email_sender.dart" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -15,6 +15,7 @@ class IITK_Mail_Client extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'IITK Mail Client',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -34,7 +35,7 @@ class IITK_Mail_Client extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const mailview(title: 'IITK Mail Client'),
+      home: const homepage(title: 'IITK Mail Client'),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iitk_mail_client/appbar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:iitk_mail_client/email_banner.dart';
+import 'package:iitk_mail_client/components/email_banner.dart';
+import 'package:iitk_mail_client/components/pfp.dart';
+import 'package:iitk_mail_client/compose.dart';
+import 'package:iitk_mail_client/models/email_banner.dart';
+
+import 'models/tabs.dart';
 
 class homepage extends StatefulWidget {
   const homepage({super.key, required this.title});
@@ -12,115 +15,77 @@ class homepage extends StatefulWidget {
   State<homepage> createState() => _homepageState();
 }
 
-class pfp extends StatelessWidget {
+class _homepageState extends State<homepage> with SingleTickerProviderStateMixin{
+
+  late TabController tabController;
+  List<EmailTab> tabs = [
+    EmailTab("Inbox",Icons.inbox_rounded),
+    EmailTab("Sent",Icons.send_sharp),
+    EmailTab("Starred",Icons.star_border),
+  ];
+
+  List<Email> emails = [
+    Email(
+      profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
+      userName: "Krish Jain",
+      subject: "Reconciliation of the Purana",
+      body: """Dear colleagues,
+
+*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
+
+*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
+
+*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
+
+Best regards,
+Rituraj
+(Thesis supervisor)""",
+      dateTime: DateTime.now().subtract(const Duration(hours: 3)),
+        receivers: ["Students","230572","230573","230574"]
+    ),
+    Email(
+        profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
+        userName: "Krish Jain",
+        subject: "Reconciliation of the Purana",
+        body: """Dear colleagues,
+
+*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
+
+*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
+
+*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
+
+Best regards,
+Rituraj
+(Thesis supervisor)""",
+        dateTime: DateTime.now().subtract(const Duration(hours: 3)),
+        receivers: ["Students","230572","230573","230574"]
+    ),
+    Email(
+        profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
+        userName: "Krish Jain",
+        subject: "Reconciliation of the Purana",
+        body: """Dear colleagues,
+
+*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
+
+*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
+
+*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
+
+Best regards,
+Rituraj
+(Thesis supervisor)""",
+        dateTime: DateTime.now().subtract(const Duration(hours: 3)),
+      receivers: ["Students","230572","230573","230574"]
+    )
+  ];
+
   @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 50, // Adjust the radius for the size you want
-      backgroundImage: "https://i.redd.it/bcyq3rjk2w071.png".isNotEmpty ? NetworkImage("https://i.redd.it/bcyq3rjk2w071.png") : null,
-      backgroundColor: Colors.grey.shade200, // A default color for the avatar
-      child: "https://i.redd.it/bcyq3rjk2w071.png".isEmpty ? Text("K") : null,
-    );
+  void initState() {
+    tabController = TabController(length: 3, vsync: this);
+    super.initState();
   }
-}
-
-
-class email_banner extends StatelessWidget {
-  // Variables
-  Color _starcolor = Colors.black54;
-  IconData _star = Icons.star_border as IconData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 10,right: 10),
-      child: Column(
-        children: [
-          AppBar(
-            toolbarHeight: 65,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            leading: pfp(),
-            title:
-            Align(
-              alignment: Alignment.topLeft,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child:  Text(
-                        "Krish Jain",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.ubuntu(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        )
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                        "Reconciliation of Purana",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.ubuntu(
-                          color: Colors.black,
-                          fontSize: 23,
-                        )
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-            actions: [
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
-                  ),
-                  // SizedBox(
-                  //   height: 5,
-                  // ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.reply,
-                          semanticLabel: "Reply",
-                          color: Colors.black54,
-                        ),
-                        iconSize: 24,
-                        onPressed: () {  },
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          _star,
-                          color: _starcolor,
-                          semanticLabel: "Mark as Important",
-                        ),
-                        iconSize: 24,
-                        onPressed: () {
-                            _star = Icons.star;
-                            _starcolor = Colors.deepOrangeAccent;
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-          Divider(
-            thickness: 1,
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class _homepageState extends State<homepage> {
 
   // Variables
   Color _starcolor = Colors.black54;
@@ -131,6 +96,10 @@ class _homepageState extends State<homepage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context,MaterialPageRoute(builder: (context) => compose()));
+      },child: Icon(Icons.edit),),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       body: Container(
         width: size.width,
         height: size.height,
@@ -159,17 +128,21 @@ class _homepageState extends State<homepage> {
                         SizedBox(
                           height: 13,
                         ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child:
-                          Text(
-                            "  All inboxes",
-                            style: GoogleFonts.ubuntu(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                          ),
+                        TabBar(
+                          controller: tabController,
+                          tabs: List.generate(3, (index) => Tab(
+                            height: 50,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                  Icon(tabs[index].iconData),
+                                Text(tabs[index].text),
+                              ],
+                            ),
+                          )),
+                          automaticIndicatorColorAdjustment: true,
+                          indicatorWeight: 2,
+                          indicatorSize: TabBarIndicatorSize.tab,
                         ),
                         // CarouselSlider(
                         //     items: [
@@ -206,112 +179,116 @@ class _homepageState extends State<homepage> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20)
                           ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10,right: 10),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        AppBar(
-                                          toolbarHeight: 70,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                                          leading: pfp(),
-                                          title:
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Column(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child:  Text(
-                                                      "Krish Jain",
-                                                      textAlign: TextAlign.left,
-                                                      style: GoogleFonts.ubuntu(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 17,
-                                                      )
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(
-                                                      "Reconciliation of Purana",
-                                                      textAlign: TextAlign.left,
-                                                      style: GoogleFonts.ubuntu(
-                                                        color: Colors.black,
-                                                        fontSize: 23,
-                                                      )
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-                                          ),
-                                          actions: [
-                                            Column(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.topCenter,
-                                                  child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
-                                                ),
-                                                // SizedBox(
-                                                //   height: 5,
-                                                // ),
-                                                Row(
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.reply,
-                                                        semanticLabel: "Reply",
-                                                        color: Colors.black54,
-                                                      ),
-                                                      iconSize: 24,
-                                                      onPressed: () {  },
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        _star,
-                                                        color: _starcolor,
-                                                        semanticLabel: "Mark as Important",
-                                                      ),
-                                                      iconSize: 24,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _star = Icons.star;
-                                                          _starcolor = Colors.deepOrangeAccent;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Divider(
-                                          thickness: 1,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  email_banner(),
-                                  email_banner(),
-                                  email_banner(),
-                                email_banner(),
-                                email_banner(),
-                                email_banner(),
-                                email_banner(),
-                                email_banner(),
-                                email_banner(),
-
-                                ],
-                            ),
-                          )
+                          child: ListView.builder(itemBuilder: (context,index) =>
+                            email_banner(email: emails[index]),
+                            itemCount: emails.length,
+                          ),
+                          // child: SingleChildScrollView(
+                          //   child: Column(
+                          //     children: [
+                          //         Padding(
+                          //           padding: EdgeInsets.only(left: 10,right: 10),
+                          //           child: Column(
+                          //             children: [
+                          //               SizedBox(
+                          //                 height: 10,
+                          //               ),
+                          //               AppBar(
+                          //                 toolbarHeight: 70,
+                          //                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          //                 leading: pfp(),
+                          //                 title:
+                          //                 Align(
+                          //                   alignment: Alignment.topLeft,
+                          //                   child: Column(
+                          //                     children: [
+                          //                       Align(
+                          //                         alignment: Alignment.topLeft,
+                          //                         child:  Text(
+                          //                             "Krish Jain",
+                          //                             textAlign: TextAlign.left,
+                          //                             style: GoogleFonts.ubuntu(
+                          //                               color: Colors.black,
+                          //                               fontWeight: FontWeight.bold,
+                          //                               fontSize: 17,
+                          //                             )
+                          //                         ),
+                          //                       ),
+                          //                       Align(
+                          //                         alignment: Alignment.topLeft,
+                          //                         child: Text(
+                          //                             "Reconciliation of Purana",
+                          //                             textAlign: TextAlign.left,
+                          //                             style: GoogleFonts.ubuntu(
+                          //                               color: Colors.black,
+                          //                               fontSize: 23,
+                          //                             )
+                          //                         ),
+                          //                       ),
+                          //
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 actions: [
+                          //                   Column(
+                          //                     children: [
+                          //                       Align(
+                          //                         alignment: Alignment.topCenter,
+                          //                         child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
+                          //                       ),
+                          //                       // SizedBox(
+                          //                       //   height: 5,
+                          //                       // ),
+                          //                       Row(
+                          //                         children: [
+                          //                           IconButton(
+                          //                             icon: Icon(
+                          //                               Icons.reply,
+                          //                               semanticLabel: "Reply",
+                          //                               color: Colors.black54,
+                          //                             ),
+                          //                             iconSize: 24,
+                          //                             onPressed: () {  },
+                          //                           ),
+                          //                           IconButton(
+                          //                             icon: Icon(
+                          //                               _star,
+                          //                               color: _starcolor,
+                          //                               semanticLabel: "Mark as Important",
+                          //                             ),
+                          //                             iconSize: 24,
+                          //                             onPressed: () {
+                          //                               setState(() {
+                          //                                 _star = Icons.star;
+                          //                                 _starcolor = Colors.deepOrangeAccent;
+                          //                               });
+                          //                             },
+                          //                           ),
+                          //                         ],
+                          //                       )
+                          //                     ],
+                          //                   )
+                          //                 ],
+                          //               ),
+                          //               Divider(
+                          //                 thickness: 1,
+                          //               )
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         email_banner(),
+                          //         email_banner(),
+                          //         email_banner(),
+                          //       email_banner(),
+                          //       email_banner(),
+                          //       email_banner(),
+                          //       email_banner(),
+                          //       email_banner(),
+                          //       email_banner(),
+                          //
+                          //       ],
+                          //   ),
+                          // )
 
                         )
                       ]

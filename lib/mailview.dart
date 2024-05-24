@@ -1,27 +1,18 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:iitk_mail_client/components/pfp.dart";
+import "package:iitk_mail_client/home.dart";
+import "package:iitk_mail_client/models/email_banner.dart";
 
 
 class mailview extends StatefulWidget {
-  const mailview({super.key, required this.title});
-  final String title;
+  mailview({super.key, required this.email});
+  final Email email;
 
   @override
   State<mailview> createState() => _mailviewState();
 }
 
-
-class pfp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 50, // Adjust the radius for the size you want
-      backgroundImage: "https://i.redd.it/bcyq3rjk2w071.png".isNotEmpty ? NetworkImage("https://i.redd.it/bcyq3rjk2w071.png") : null,
-      backgroundColor: Colors.grey.shade200, // A default color for the avatar
-      child: "https://i.redd.it/bcyq3rjk2w071.png".isEmpty ? Text("K") : null,
-    );
-  }
-}
 
 class _mailviewState extends State<mailview> {
 
@@ -31,6 +22,16 @@ class _mailviewState extends State<mailview> {
 
   @override
   Widget build(BuildContext context) {
+    final dateTime = widget.email.dateTime!;
+    var month = dateTime.month;
+    var mapping = {1:"Jan",2:"Feb",3:"Mar",4:"Apr",5:"May",6:"June",7:"July",8:"Aug",9:"Sept",10:"Oct",11:"Nov",12:"Dec"};
+    var monthname = mapping[month];
+    var hour = dateTime.hour;
+    var min = dateTime.minute;
+    var day = dateTime.day;
+    var month_str = "${monthname!} $day";
+    var time_str = "$hour:$min";
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +42,9 @@ class _mailviewState extends State<mailview> {
             color: Colors.black54,
             semanticLabel: "Back",
           ),
-          onPressed: () {  },
+          onPressed: () { 
+            Navigator.push(context,MaterialPageRoute(builder: (context) => homepage(title: "Home Page")));
+          },
         ),
         actions: [
           Row(
@@ -91,7 +94,7 @@ class _mailviewState extends State<mailview> {
                                 child: Container(
 
                                   child: Text(
-                                    "Reconciliation of Purana by Krish Jain",
+                                    widget.email.subject!,
                                     style: GoogleFonts.ubuntu(
                                       color : Colors.black,
                                       fontSize : 30,
@@ -126,13 +129,14 @@ class _mailviewState extends State<mailview> {
                   Padding(
                       padding: EdgeInsets.only(top: 100, left: 15,right: 10),
                     child: AppBar(
-                      leading: pfp(),
+                      foregroundColor: Colors.white,
+                      leading: pfp(profileImage: widget.email.profileImage!,userName: widget.email.userName!),
                       title: Column(
                         children: [
                           Row(
                             children: [
                               Text(
-                                "Krish Jain",
+                                widget.email.userName!,
                                 style: GoogleFonts.ubuntu(
                                   fontSize : 25,
                                   color : Colors.black,
@@ -140,25 +144,40 @@ class _mailviewState extends State<mailview> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(
-                                width: 10,
+                                width: 32,
                               ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                  "12:24 PM",
-                                  style: GoogleFonts.ubuntu(
-                                    color : Colors.black54,
-                                    fontSize : 15,
+                              Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      month_str,
+                                      style: GoogleFonts.ubuntu(
+                                        color : Colors.black54,
+                                        fontSize : 15,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      time_str,
+                                      style: GoogleFonts.ubuntu(
+                                        color : Colors.black54,
+                                        fontSize : 15,
+                                      ),
+                                    ),
+                                  ),
+
+                                ],
+                              )
 
                             ],
                           ),
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "to Krish Jain",
+                              "to ${widget.email.receivers?[0]}",
                               style: GoogleFonts.ubuntu(
                                 color : Colors.black54,
                                 fontSize : 20,
@@ -199,17 +218,7 @@ class _mailviewState extends State<mailview> {
                         child: Column(
                           children: [
                             Text(
-                              """Dear colleagues,
-
-*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
-
-*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
-
-*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
-
-Best regards,
-Rituraj
-(Thesis supervisor)""",
+                              widget.email.body!,
                               maxLines: 100000000,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,

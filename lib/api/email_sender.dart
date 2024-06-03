@@ -6,30 +6,30 @@ import 'package:mime/mime.dart';
 
 /// Low level SMTP API example
 Future<Object> sendEmail(List<MailAddress> to,List<MailAddress> bcc,String subject, String body,File? file) async {
-  String senderName = dotenv.env["NAME"]!;
-  String email = dotenv.env["EMAIL"]!;
-  String userName = dotenv.env["USERNAME"]!;
-  String password = dotenv.env["PASSWORD"]!;
-  String smtpServerHost = dotenv.env["SENDER"]!;
-  int smtpServerPort = dotenv.env["SENDER_PORT"]! as int;
+  // String senderName = dotenv.env["NAME"]!;
+  // String email = dotenv.env["EMAIL"]!;
+  // String userName = dotenv.env["USERNAME"]!;
+  // String password = dotenv.env["PASSWORD"]!;
+  // String smtpServerHost = dotenv.env["SENDER"]!;
+  // int smtpServerPort = dotenv.env["SENDER_PORT"]! as int;
   bool isSmtpServerSecure = true;
   final client = SmtpClient('enough.de', isLogEnabled: true);
   try {
-    await client.connectToServer(smtpServerHost, smtpServerPort,
+    await client.connectToServer("mmtp.iitk.ac.in", 465,
         isSecure: isSmtpServerSecure);
     await client.ehlo();
     if (client.serverInfo.supportsAuth(AuthMechanism.plain)) {
-      await client.authenticate(userName, password, AuthMechanism.plain);
+      await client.authenticate("krishjain23", "D1y_8U-leK", AuthMechanism.plain);
     } else if (client.serverInfo.supportsAuth(AuthMechanism.login)) {
-      await client.authenticate(userName, password, AuthMechanism.login);
+      await client.authenticate("krishjain23", "D1y_8U-leK", AuthMechanism.login);
     } else {
       return [-1,""];
     }
     final MimeMessage mimeMessage;
     if(file != null){
-      mimeMessage = buildMessageWithAttachment(senderName, email, to, bcc, subject, body, file) as MimeMessage;
+      mimeMessage = buildMessageWithAttachment("Krish Jain", "krishjain23@iitk.ac.in", to, bcc, subject, body, file) as MimeMessage;
     }else{
-      mimeMessage = buildMessage(senderName,email,to,bcc,subject,body);
+      mimeMessage = buildMessage("Krish Jain","krishjain23@iitk.ac.in",to,bcc,subject,body);
     }
     final sendResponse = await client.sendMessage(mimeMessage);
     if(sendResponse.isOkStatus){

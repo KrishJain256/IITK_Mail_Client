@@ -1,3 +1,4 @@
+import "package:enough_mail/enough_mail.dart";
 import "package:flutter/material.dart";
 import "package:get_time_ago/get_time_ago.dart";
 import "package:iitk_mail_client/components/pfp.dart";
@@ -6,8 +7,8 @@ import "package:iitk_mail_client/mailview.dart";
 import "package:iitk_mail_client/models/email_banner.dart";
 
 class email_banner extends StatelessWidget {
-  final Email email;
-  email_banner({super.key, required this.email});
+  final MimeMessage message;
+  email_banner({super.key, required this.message});
 
   // Variables
   Color _starcolor = Colors.black54;
@@ -21,24 +22,24 @@ class email_banner extends StatelessWidget {
         children: [
           TextButton(
               onPressed: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => mailview(email: this.email)));
+                Navigator.push(context,MaterialPageRoute(builder: (context) => mailview(email: this.message)));
               },
               child: AppBar(
                 toolbarHeight: 90,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                leading: pfp(profileImage: email.profileImage!,userName: email.userName!),
+                leading: pfp(userName: message.from.toString().split('"')[2]),
                 title:
                 Align(
                   alignment: Alignment.topLeft,
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 40,
-                      ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
                       Align(
                         alignment: Alignment.topLeft,
                         child:  Text(
-                            email.userName!,
+                            message.from.toString().split('"')[1],
                             textAlign: TextAlign.left,
                             style: GoogleFonts.ubuntu(
                               color: Colors.black,
@@ -50,23 +51,25 @@ class email_banner extends StatelessWidget {
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                            email.subject!,
+                            message.decodeSubject()!,
                             textAlign: TextAlign.left,
+                            maxLines: 2,
                             style: GoogleFonts.ubuntu(
                               color: Colors.black,
-                              fontSize: 23,
+                              fontSize: 18,
                             )
                         ),
                       ),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                            email.body!,
+                            message.decodeTextPlainPart().toString(),
                             textAlign: TextAlign.left,
                             style: GoogleFonts.ubuntu(
                               color: Colors.black,
-                              fontSize: 17,
-                            )
+                              fontSize: 15,
+                            ),
+                          maxLines: 1,
                         ),
                       ),
 
@@ -78,7 +81,7 @@ class email_banner extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: Text(GetTimeAgo.parse(email.dateTime!),style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
+                        child: Text(GetTimeAgo.parse(message.decodeDate()!),style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
                       ),
                       // SizedBox(
                       //   height: 5,

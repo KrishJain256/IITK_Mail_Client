@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:enough_mail/enough_mail.dart';
 import "package:iitk_mail_client/api/email_sender.dart";
 
-class compose extends StatefulWidget {
+class compose extends StatefulWidget{
   const compose({super.key});
 
   @override
@@ -15,12 +15,9 @@ class compose extends StatefulWidget {
 class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
   List<MailAddress> to = [];
   String subject = "";
-  dynamic body;
+  String own_email = "krishjain23@iitk.ac.in";
+  String body = "";
 
-
-  Future<String> getEmail() async{
-    return dotenv.env["EMAIL"]!.toString();
-  }
 
   setToList(List emails) {
     to = List.generate(emails.length, (index) => MailAddress(emails[index].toString().split("@")[0] as String?,emails[index]));
@@ -31,7 +28,7 @@ class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
   }
 
   setBodyText(String body) {
-    this.body = Text(body);
+    this.body = body;
   }
    
   
@@ -104,7 +101,7 @@ class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
                         ),
 
                     title: Text(
-                      getEmail().toString(),
+                      own_email,
                       style: GoogleFonts.ubuntu(
                         color: Colors.white,
                         fontSize: 18,
@@ -185,7 +182,7 @@ class _BodyInputState extends State<BodyInput> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: TextField(
-                      maxLength: 30000,
+                      maxLength: 255,
                       maxLines: null,
                       style: TextStyle(
                         fontSize: 18,
@@ -215,7 +212,7 @@ class _BodyInputState extends State<BodyInput> {
 
   updateBody() {
     setState(() {
-      widget.setBody(_bodyController.text.trim());
+      widget.setBody(_bodyController.text.toString().trim());
     });
   }
 
@@ -288,7 +285,7 @@ class _SubjectInputState extends State<SubjectInput> {
 
   updateSubject() {
     setState(() {
-      widget.setSubject(_subjectController.text.trim());
+      widget.setSubject(_subjectController.text.toString().trim());
     });
   }
 

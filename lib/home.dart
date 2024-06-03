@@ -4,6 +4,10 @@ import 'package:iitk_mail_client/components/email_banner.dart';
 import 'package:iitk_mail_client/components/pfp.dart';
 import 'package:iitk_mail_client/compose.dart';
 import 'package:iitk_mail_client/models/email_banner.dart';
+import 'dart:io';
+import 'package:enough_mail/enough_mail.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mime/mime.dart';
 
 import 'models/tabs.dart';
 
@@ -24,66 +28,38 @@ class _homepageState extends State<homepage> with SingleTickerProviderStateMixin
     EmailTab("Starred",Icons.star_border),
   ];
 
-  List<Email> emails = [
-    Email(
-      profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
-      userName: "Krish Jain",
-      subject: "Reconciliation of the Purana",
-      body: """Dear colleagues,
+  List<MimeMessage> emails = [];
 
-*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
+  void fetchMails() async{
+    final client = ImapClient(isLogEnabled: false);
+    try {
+      await client.connectToServer("qasid.iitk.ac.in",993,
+          isSecure:true);
+      await client.login("krishjain23", "D1y_8U-leK");
+      final mailboxes = await client.listMailboxes();
+      print('mailboxes: $mailboxes');
+      await client.selectInbox();
+      // fetch 10 most recent messages:
+      final fetchResult = await client.fetchRecentMessages(
+          messageCount: 10, criteria: 'BODY.PEEK[]');
+      setState(() {
+        emails = fetchResult.messages;
+      });
+      await client.logout();
+    } on ImapException catch (e) {
+      print('IMAP failed with $e');
+    }
+  }
 
-*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
-
-*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
-
-Best regards,
-Rituraj
-(Thesis supervisor)""",
-      dateTime: DateTime.now().subtract(const Duration(hours: 3)),
-        receivers: ["Students","230572","230573","230574"]
-    ),
-    Email(
-        profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
-        userName: "Krish Jain",
-        subject: "Reconciliation of the Purana",
-        body: """Dear colleagues,
-
-*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
-
-*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
-
-*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
-
-Best regards,
-Rituraj
-(Thesis supervisor)""",
-        dateTime: DateTime.now().subtract(const Duration(hours: 3)),
-        receivers: ["Students","230572","230573","230574"]
-    ),
-    Email(
-        profileImage: "https://i.redd.it/bcyq3rjk2w071.png",
-        userName: "Krish Jain",
-        subject: "Reconciliation of the Purana",
-        body: """Dear colleagues,
-
-*Onkar S. Mane* (22104067) from the Electrical Engineering department will defend his M.Tech. thesis on *17th May in ACES 213 at 3 pm*. The title and the abstract of the talk are given below. All interested are welcome to attend the same.
-
-*Title*: An improved design of Waveguide-integrated Mach-Zehnder Interferometer mesh for programmable linear computation.
-
-*Abstract*: The growth in computing demands driven by the advancements in artificial intelligence and data communication necessitate energy-efficient devices that can process information at high speeds and integrate seamlessly into compact platforms. Integrated photonic devices, networks of tuneable Mach-Zehnder Interferometers (MZI) in particular, have emerged as a promising platform for performing linear computational tasks. This study introduces a novel design of MZI, the basic building block of these networks, that is both significantly less complex and smaller than the conventional MZIs. Our redesigned MZI has a streamlined structure foregoing the curved bends in the conventional MZIs and occupies less than 1/10th of the area. This optimization also prevents bending losses, simplifies fabrication, and thus greatly enhances device scalability. This work is a significant step towards the realization of larger and denser MZI networks enabling applications in both classical and quantum information processing tasks.
-
-Best regards,
-Rituraj
-(Thesis supervisor)""",
-        dateTime: DateTime.now().subtract(const Duration(hours: 3)),
-      receivers: ["Students","230572","230573","230574"]
-    )
-  ];
 
   @override
-  void initState() {
+  void initState(){
     tabController = TabController(length: 3, vsync: this);
+    // setState(() {
+    //   this.emails = fetchMails() as List<Email>;
+    // });
+    // this.emails = fetchMails() as List<Email>;
+    fetchMails();
     super.initState();
   }
 
@@ -169,7 +145,7 @@ Rituraj
                     ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(top: 170),
+                    padding: EdgeInsets.only(top: 198),
                     child: Column(
                       children: [
                         Container(
@@ -180,7 +156,7 @@ Rituraj
                               borderRadius: BorderRadius.circular(20)
                           ),
                           child: ListView.builder(itemBuilder: (context,index) =>
-                            email_banner(email: emails[index]),
+                            email_banner(message: emails[index]),
                             itemCount: emails.length,
                           ),
                           // child: SingleChildScrollView(

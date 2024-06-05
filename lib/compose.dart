@@ -6,7 +6,9 @@ import 'package:enough_mail/enough_mail.dart';
 import "package:iitk_mail_client/api/email_sender.dart";
 
 class compose extends StatefulWidget{
-  const compose({super.key});
+  const compose({super.key, required this.username, required this.password});
+  final String username;
+  final String password;
 
   @override
   State<compose> createState() => _composeMail();
@@ -15,7 +17,6 @@ class compose extends StatefulWidget{
 class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
   List<MailAddress> to = [];
   String subject = "";
-  String own_email = "krishjain23@iitk.ac.in";
   String body = "";
 
 
@@ -69,7 +70,7 @@ class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
                       ),
                       IconButton(
                           onPressed: () {
-                            sendEmail(to, [], subject, body, null);
+                            sendEmail(widget.username,widget.password,to, [], subject, body, null);
                           },
                           icon: Icon(
                             Icons.send_sharp,
@@ -101,7 +102,7 @@ class _composeMail extends State<compose> with SingleTickerProviderStateMixin{
                         ),
 
                     title: Text(
-                      own_email,
+                      widget.username+"@iitk.ac.in",
                       style: GoogleFonts.ubuntu(
                         color: Colors.white,
                         fontSize: 18,

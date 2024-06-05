@@ -4,8 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mime/mime.dart';
 
 
-/// Low level SMTP API example
-Future<Object> sendEmail(List<MailAddress> to,List<MailAddress> bcc,String subject, String body,File? file) async {
+/// For sending emails using Low Level API Usage
+/// Accepts username, password, List of Mail Addresses to be mailed,
+/// List of Mail Addresses for bcc, Subject, Body, File Attachment in form of PDF
+Future<Object> sendEmail(String username,String password,List<MailAddress> to,List<MailAddress> bcc,String subject, String body,File? file) async {
   // String senderName = dotenv.env["NAME"]!;
   // String email = dotenv.env["EMAIL"]!;
   // String userName = dotenv.env["USERNAME"]!;
@@ -19,17 +21,17 @@ Future<Object> sendEmail(List<MailAddress> to,List<MailAddress> bcc,String subje
         isSecure: isSmtpServerSecure);
     await client.ehlo();
     if (client.serverInfo.supportsAuth(AuthMechanism.plain)) {
-      await client.authenticate("krishjain23", "D1y_8U-leK", AuthMechanism.plain);
+      await client.authenticate(username, password, AuthMechanism.plain);
     } else if (client.serverInfo.supportsAuth(AuthMechanism.login)) {
-      await client.authenticate("krishjain23", "D1y_8U-leK", AuthMechanism.login);
+      await client.authenticate(username, password, AuthMechanism.login);
     } else {
       return [-1,""];
     }
     final MimeMessage mimeMessage;
     if(file != null){
-      mimeMessage = buildMessageWithAttachment("Krish Jain", "krishjain23@iitk.ac.in", to, bcc, subject, body, file) as MimeMessage;
+      mimeMessage = buildMessageWithAttachment(username, username+"@iitk.ac.in", to, bcc, subject, body, file) as MimeMessage;
     }else{
-      mimeMessage = buildMessage("Krish Jain","krishjain23@iitk.ac.in",to,bcc,subject,body);
+      mimeMessage = buildMessage(username,username+"@iitk.ac.in",to,bcc,subject,body);
     }
     final sendResponse = await client.sendMessage(mimeMessage);
     if(sendResponse.isOkStatus){
@@ -43,7 +45,9 @@ Future<Object> sendEmail(List<MailAddress> to,List<MailAddress> bcc,String subje
   }
 }
 
-/// Builds a simple example message
+/// Building Email without attachment
+/// Accepts the name of the sender, email of the sender, List of Mail Addresses to be mailed,
+/// List of Mail Addresses for bcc, Subject and Body
 MimeMessage buildMessage(String name,String email,List<MailAddress> to,List<MailAddress> bcc,String subject,String body) {
   final builder = MessageBuilder.prepareMultipartAlternativeMessage(
     plainText: body,
@@ -56,7 +60,9 @@ MimeMessage buildMessage(String name,String email,List<MailAddress> to,List<Mail
   return builder.buildMimeMessage();
 }
 
-/// Builds an example message with attachment
+/// Building Email with attachment
+/// Accepts the name of the sender, email of the sender, List of Mail Addresses to be mailed,
+/// List of Mail Addresses for bcc, Subject, Body and Attachment file of type PDF
 Future<MimeMessage> buildMessageWithAttachment(String name,String email,List<MailAddress> to,List<MailAddress> bcc,String subject,String body,File attachment) async {
   final builder = MessageBuilder()
     ..from = [MailAddress(name, email)]

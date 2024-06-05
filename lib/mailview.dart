@@ -7,8 +7,10 @@ import "package:iitk_mail_client/models/email_banner.dart";
 
 
 class mailview extends StatefulWidget {
-  mailview({super.key, required this.email});
+  mailview({super.key, required this.email, required this.username, required this.password});
   final MimeMessage email;
+  final String username;
+  final String password;
 
   @override
   State<mailview> createState() => _mailviewState();
@@ -44,7 +46,7 @@ class _mailviewState extends State<mailview> {
             semanticLabel: "Back",
           ),
           onPressed: () { 
-            Navigator.push(context,MaterialPageRoute(builder: (context) => homepage(title: "Home Page")));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => homepage(title: "Home Page", userName: widget.username,password: widget.password,)));
           },
         ),
         actions: [

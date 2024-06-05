@@ -11,14 +11,18 @@ import 'package:mime/mime.dart';
 
 import 'models/tabs.dart';
 
+/// Homepage class
 class homepage extends StatefulWidget {
-  const homepage({super.key, required this.title});
+  const homepage({super.key, required this.title, required this.userName, required this.password});
   final String title;
+  final String userName;
+  final String password;
 
   @override
   State<homepage> createState() => _homepageState();
 }
 
+/// HomePageState
 class _homepageState extends State<homepage> with SingleTickerProviderStateMixin{
 
   late TabController tabController;
@@ -35,7 +39,7 @@ class _homepageState extends State<homepage> with SingleTickerProviderStateMixin
     try {
       await client.connectToServer("qasid.iitk.ac.in",993,
           isSecure:true);
-      await client.login("krishjain23", "D1y_8U-leK");
+      await client.login(widget.userName, widget.password);
       final mailboxes = await client.listMailboxes();
       print('mailboxes: $mailboxes');
       await client.selectInbox();
@@ -73,7 +77,7 @@ class _homepageState extends State<homepage> with SingleTickerProviderStateMixin
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context,MaterialPageRoute(builder: (context) => compose()));
+        Navigator.push(context,MaterialPageRoute(builder: (context) => compose(username: widget.userName,password: widget.password,)));
       },child: Icon(Icons.edit),),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       body: Container(
@@ -144,132 +148,135 @@ class _homepageState extends State<homepage> with SingleTickerProviderStateMixin
                       ],
                     ),
                 ),
-                Padding(
+                SingleChildScrollView(
+                  child: Padding(
                     padding: EdgeInsets.only(top: 198),
                     child: Column(
-                      children: [
-                        Container(
-                          width: size.width,
-                          height: size.height - 250,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: ListView.builder(itemBuilder: (context,index) =>
-                            email_banner(message: emails[index]),
-                            itemCount: emails.length,
-                          ),
-                          // child: SingleChildScrollView(
-                          //   child: Column(
-                          //     children: [
-                          //         Padding(
-                          //           padding: EdgeInsets.only(left: 10,right: 10),
-                          //           child: Column(
-                          //             children: [
-                          //               SizedBox(
-                          //                 height: 10,
-                          //               ),
-                          //               AppBar(
-                          //                 toolbarHeight: 70,
-                          //                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                          //                 leading: pfp(),
-                          //                 title:
-                          //                 Align(
-                          //                   alignment: Alignment.topLeft,
-                          //                   child: Column(
-                          //                     children: [
-                          //                       Align(
-                          //                         alignment: Alignment.topLeft,
-                          //                         child:  Text(
-                          //                             "Krish Jain",
-                          //                             textAlign: TextAlign.left,
-                          //                             style: GoogleFonts.ubuntu(
-                          //                               color: Colors.black,
-                          //                               fontWeight: FontWeight.bold,
-                          //                               fontSize: 17,
-                          //                             )
-                          //                         ),
-                          //                       ),
-                          //                       Align(
-                          //                         alignment: Alignment.topLeft,
-                          //                         child: Text(
-                          //                             "Reconciliation of Purana",
-                          //                             textAlign: TextAlign.left,
-                          //                             style: GoogleFonts.ubuntu(
-                          //                               color: Colors.black,
-                          //                               fontSize: 23,
-                          //                             )
-                          //                         ),
-                          //                       ),
-                          //
-                          //                     ],
-                          //                   ),
-                          //                 ),
-                          //                 actions: [
-                          //                   Column(
-                          //                     children: [
-                          //                       Align(
-                          //                         alignment: Alignment.topCenter,
-                          //                         child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
-                          //                       ),
-                          //                       // SizedBox(
-                          //                       //   height: 5,
-                          //                       // ),
-                          //                       Row(
-                          //                         children: [
-                          //                           IconButton(
-                          //                             icon: Icon(
-                          //                               Icons.reply,
-                          //                               semanticLabel: "Reply",
-                          //                               color: Colors.black54,
-                          //                             ),
-                          //                             iconSize: 24,
-                          //                             onPressed: () {  },
-                          //                           ),
-                          //                           IconButton(
-                          //                             icon: Icon(
-                          //                               _star,
-                          //                               color: _starcolor,
-                          //                               semanticLabel: "Mark as Important",
-                          //                             ),
-                          //                             iconSize: 24,
-                          //                             onPressed: () {
-                          //                               setState(() {
-                          //                                 _star = Icons.star;
-                          //                                 _starcolor = Colors.deepOrangeAccent;
-                          //                               });
-                          //                             },
-                          //                           ),
-                          //                         ],
-                          //                       )
-                          //                     ],
-                          //                   )
-                          //                 ],
-                          //               ),
-                          //               Divider(
-                          //                 thickness: 1,
-                          //               )
-                          //             ],
-                          //           ),
-                          //         ),
-                          //         email_banner(),
-                          //         email_banner(),
-                          //         email_banner(),
-                          //       email_banner(),
-                          //       email_banner(),
-                          //       email_banner(),
-                          //       email_banner(),
-                          //       email_banner(),
-                          //       email_banner(),
-                          //
-                          //       ],
-                          //   ),
-                          // )
+                        children: [
+                          Container(
+                            width: size.width,
+                            height: size.height - 250,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: ListView.builder(itemBuilder: (context,index) =>
+                                email_banner(message: emails[index], username: widget.userName, password: widget.password,),
+                              itemCount: emails.length,
+                            ),
+                            // child: SingleChildScrollView(
+                            //   child: Column(
+                            //     children: [
+                            //         Padding(
+                            //           padding: EdgeInsets.only(left: 10,right: 10),
+                            //           child: Column(
+                            //             children: [
+                            //               SizedBox(
+                            //                 height: 10,
+                            //               ),
+                            //               AppBar(
+                            //                 toolbarHeight: 70,
+                            //                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            //                 leading: pfp(),
+                            //                 title:
+                            //                 Align(
+                            //                   alignment: Alignment.topLeft,
+                            //                   child: Column(
+                            //                     children: [
+                            //                       Align(
+                            //                         alignment: Alignment.topLeft,
+                            //                         child:  Text(
+                            //                             "Krish Jain",
+                            //                             textAlign: TextAlign.left,
+                            //                             style: GoogleFonts.ubuntu(
+                            //                               color: Colors.black,
+                            //                               fontWeight: FontWeight.bold,
+                            //                               fontSize: 17,
+                            //                             )
+                            //                         ),
+                            //                       ),
+                            //                       Align(
+                            //                         alignment: Alignment.topLeft,
+                            //                         child: Text(
+                            //                             "Reconciliation of Purana",
+                            //                             textAlign: TextAlign.left,
+                            //                             style: GoogleFonts.ubuntu(
+                            //                               color: Colors.black,
+                            //                               fontSize: 23,
+                            //                             )
+                            //                         ),
+                            //                       ),
+                            //
+                            //                     ],
+                            //                   ),
+                            //                 ),
+                            //                 actions: [
+                            //                   Column(
+                            //                     children: [
+                            //                       Align(
+                            //                         alignment: Alignment.topCenter,
+                            //                         child: Text("12:24 PM",style: GoogleFonts.ubuntu(color:Colors.black,fontSize:12)),
+                            //                       ),
+                            //                       // SizedBox(
+                            //                       //   height: 5,
+                            //                       // ),
+                            //                       Row(
+                            //                         children: [
+                            //                           IconButton(
+                            //                             icon: Icon(
+                            //                               Icons.reply,
+                            //                               semanticLabel: "Reply",
+                            //                               color: Colors.black54,
+                            //                             ),
+                            //                             iconSize: 24,
+                            //                             onPressed: () {  },
+                            //                           ),
+                            //                           IconButton(
+                            //                             icon: Icon(
+                            //                               _star,
+                            //                               color: _starcolor,
+                            //                               semanticLabel: "Mark as Important",
+                            //                             ),
+                            //                             iconSize: 24,
+                            //                             onPressed: () {
+                            //                               setState(() {
+                            //                                 _star = Icons.star;
+                            //                                 _starcolor = Colors.deepOrangeAccent;
+                            //                               });
+                            //                             },
+                            //                           ),
+                            //                         ],
+                            //                       )
+                            //                     ],
+                            //                   )
+                            //                 ],
+                            //               ),
+                            //               Divider(
+                            //                 thickness: 1,
+                            //               )
+                            //             ],
+                            //           ),
+                            //         ),
+                            //         email_banner(),
+                            //         email_banner(),
+                            //         email_banner(),
+                            //       email_banner(),
+                            //       email_banner(),
+                            //       email_banner(),
+                            //       email_banner(),
+                            //       email_banner(),
+                            //       email_banner(),
+                            //
+                            //       ],
+                            //   ),
+                            // )
 
-                        )
-                      ]
+                          )
+                        ]
                     ),
+                  ),
                 )
+
 
               ],
             )

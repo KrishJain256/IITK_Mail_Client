@@ -35,7 +35,7 @@ class IITK_Mail_Client extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const homepage(title: 'IITK Mail Client'),
+      home: const loginpage(title: 'IITK Mail Client'),
     );
   }
 }

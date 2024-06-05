@@ -1,5 +1,9 @@
+import 'package:enough_mail/enough_mail.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iitk_mail_client/api/auth.dart';
+
+import 'home.dart';
 
 class loginpage extends StatefulWidget {
   const loginpage({super.key, required this.title});
@@ -66,6 +70,17 @@ class loginpage extends StatefulWidget {
 
 
 class _loginpageState extends State<loginpage> {
+  String userName = "";
+  String password = "";
+
+  setUserName(String username) {
+  this.userName = username;
+  }
+
+  setPassword(String password) {
+    this.password = password;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -115,15 +130,23 @@ class _loginpageState extends State<loginpage> {
                       SizedBox(
                         height: 40,
                       ),
-                      input("Username", false),
-                      input("Password", true),
+                      UsernameInput(key: Key("USERNAME_INPUT"), setUsername: setUserName, hint: "Username",),
+                      PasswordInput(key: Key("PASSWORD_INPUT"), setPassword: setPassword, hint: "Password",),
                       SizedBox(
                         height: 20,
                       ),
 
                       TextButton(
                         // null for now , since its just UI
-                        onPressed: null,
+                        onPressed: () async {
+                          int verify = await auth(userName,password);
+                          if (verify == 1){
+                            Navigator.push(context,MaterialPageRoute(builder: (context) => homepage(key: Key("HOME_PAGE"), title: "Home Page",userName: userName,password: password)));
+                          }
+                          else{
+
+                          }
+                        },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 40),
@@ -151,121 +174,176 @@ class _loginpageState extends State<loginpage> {
                 )
               ],
             ),
-            Text(
-              "Connect with us",
-              style: GoogleFonts.ubuntu(
-                  color: Colors.blueGrey, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff38a4ef),
-                            offset: Offset(3.0, 3.0),
-                            blurRadius: 15,
-                            spreadRadius: 1.0),
-                        BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(-3.0, -3.0),
-                            blurRadius: 15,
-                            spreadRadius: 1.0),
-                      ],
-                      borderRadius: BorderRadius.circular(30),
-                      color: Color(0xff38a4ef),
-                    ),
-                    height: 40,
-                    width: 160,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Image.asset("assets/facebook.png"),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Facebook",
-                            style: GoogleFonts.ubuntu(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff38a4ef),
-                            offset: Offset(3.0, 3.0),
-                            blurRadius: 15,
-                            spreadRadius: 1.0),
-                        BoxShadow(
-                            color: Colors.white,
-                            offset: Offset(-3.0, -3.0),
-                            blurRadius: 15,
-                            spreadRadius: 1.0),
-                      ],
-                      borderRadius: BorderRadius.circular(30),
-                      color: Color(0xff5172b4),
-                    ),
-                    height: 40,
-                    width: 160,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Image.asset("assets/twitter.png",
-                              color: Colors.white),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Twitter",
-                            style: GoogleFonts.ubuntu(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account? ",
-                  style: GoogleFonts.ubuntu(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Sign Up",
-                  style: GoogleFonts.ubuntu(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                )
-              ],
-            )
+
           ],
         ),
       ),
     );
   }
 }
+
+class UsernameInput extends StatefulWidget {
+  final Function setUsername;
+  final String hint;
+  const UsernameInput({required Key key, required this.setUsername, required this.hint}) : super(key: key);
+
+  @override
+  _UsernameInputState createState() => _UsernameInputState();
+}
+
+class _UsernameInputState extends State<UsernameInput> {
+  late TextEditingController _usernameController;
+  FocusNode focus = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+
+    focus.addListener(() {
+      if (!focus.hasFocus) {
+        updateUsername();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30), color: Colors.white),
+        child: TextFormField(
+          decoration: InputDecoration(
+              hintText: widget.hint,
+              hintStyle: GoogleFonts.ubuntu(color: Colors.grey),
+              contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+              prefix: Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Icon(Icons.person_outline, color: Colors.grey),
+              ),
+              suffixIcon: Icon(Icons.assignment_turned_in_rounded,
+                  color: Colors.greenAccent),
+              border: UnderlineInputBorder(borderSide: BorderSide.none)),
+          controller: _usernameController,
+          focusNode: focus,
+          onEditingComplete: () {
+            updateUsername();
+          },
+        ),
+
+      ),
+    );
+      //
+      // Container(
+      //   child: Center(
+      //     child: Column(
+      //       children: <Widget>[
+      //         Container(
+      //             constraints: BoxConstraints(
+      //               minWidth: 0,
+      //             ),
+      //             child: SingleChildScrollView(
+      //               scrollDirection: Axis.vertical,
+      //               child: TextField(
+      //                 maxLength: 255,
+      //                 maxLines: null,
+      //                 style: TextStyle(
+      //                   fontSize: 18,
+      //                   color: Colors.white,
+      //                 ),
+      //                 keyboardType: TextInputType.text,
+      //                 decoration: InputDecoration.collapsed(
+      //                     hintText: widget.hint,
+      //                     hintStyle: TextStyle(
+      //                       fontSize: 22,
+      //                       color: Colors.white70,
+      //                     )
+      //                 ),
+      //                 controller: _usernameController,
+      //                 focusNode: focus,
+      //                 onEditingComplete: () {
+      //                   updateUsername();
+      //                 },
+      //               ),
+      //             )
+      //         )
+      //       ],
+      //     ),
+      //   ));
+  }
+
+
+  updateUsername() {
+    setState(() {
+      widget.setUsername(_usernameController.text.toString().trim());
+    });
+  }
+
+}
+
+
+class PasswordInput extends StatefulWidget {
+  final Function setPassword;
+  final String hint;
+  const PasswordInput({required Key key, required this.setPassword, required this.hint}) : super(key: key);
+
+  @override
+  _PasswordInputState createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<PasswordInput> {
+  late TextEditingController _passwordController;
+  FocusNode focus = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _passwordController = TextEditingController();
+
+    focus.addListener(() {
+      if (!focus.hasFocus) {
+        updatePassword();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30), color: Colors.white),
+        child: TextFormField(
+          decoration: InputDecoration(
+              hintText: widget.hint,
+              hintStyle: GoogleFonts.ubuntu(color: Colors.grey),
+              contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+              prefix: Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Icon(Icons.lock_outline, color: Colors.grey),
+              ),
+              border: UnderlineInputBorder(borderSide: BorderSide.none)),
+          controller: _passwordController,
+          focusNode: focus,
+          onEditingComplete: () {
+            updatePassword();
+          },
+        ),
+
+      ),
+    );
+  }
+
+
+  updatePassword() {
+    setState(() {
+      widget.setPassword(_passwordController.text.toString().trim());
+    });
+  }
+
+}
+
 
 Widget input(String hint, bool pass) {
   return Padding(

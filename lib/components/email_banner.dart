@@ -6,9 +6,12 @@ import "package:google_fonts/google_fonts.dart";
 import "package:iitk_mail_client/mailview.dart";
 import "package:iitk_mail_client/models/email_banner.dart";
 
+/// Home Page Email Banner
 class email_banner extends StatelessWidget {
   final MimeMessage message;
-  email_banner({super.key, required this.message});
+  final String username;
+  final String password;
+  email_banner({super.key, required this.message, required this.username, required this.password});
 
   // Variables
   Color _starcolor = Colors.black54;
@@ -22,12 +25,12 @@ class email_banner extends StatelessWidget {
         children: [
           TextButton(
               onPressed: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => mailview(email: this.message)));
+                Navigator.push(context,MaterialPageRoute(builder: (context) => mailview(email: this.message,username: username,password: password,)));
               },
               child: AppBar(
                 toolbarHeight: 90,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                leading: pfp(userName: message.from.toString().split('"')[2]),
+                leading: pfp(userName: message.from.toString().split('"')[0]),
                 title:
                 Align(
                   alignment: Alignment.topLeft,
